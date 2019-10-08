@@ -10,7 +10,8 @@ router.post('/signup', (req,res) => {
     Rec.create({
         fullName: req.body.fullName,
         email: req.body.email,
-        passwordHash: bcrypt.hashSync(req.body.password, 10)
+        userName: req.body.userName,
+        password: bcrypt.hashSync(req.body.password, 10)
     }).then(
         createSuccess = (rec) => {
             let token = jwt.sign({ id: rec.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })

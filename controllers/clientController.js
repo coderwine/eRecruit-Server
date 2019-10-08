@@ -1,15 +1,15 @@
 const router = require('express').Router();
-const Client = require('../db').import('../models/client');
+const sequelize = require('../db');
+const Client = sequelize.import('../models/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 //! SIGNUP
-
 router.post('/signup', (req,res) => {
     Client.create({
         fullName: req.body.fullName,
         email: req.body.email,
-        passwordHash: bcrypt.hashSync(req.body.password, 10)
+        passwordhash: bcrypt.hashSync(req.body.passwordhash, 10)
     }).then(
         createSuccess = (client) => {
             let token = jwt.sign({ id: client.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
@@ -28,11 +28,11 @@ router.post('/signup', (req,res) => {
 router.post('/login', (req,res) => {
     Client.findOne({
         where: {
-            userName: req.body.userName
+            email: req.body.email
         }
     }).then(client => {
         if(client){
-            bcrypt.compare(req.body.password, client.password, (err, matches) => {
+            bcrypt.compare(req.body.passwordhash, client.passwordhash, (err, matches) => {
                 if(matches){
                     let token = jwt.sign({ id: client.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
                     res.json({
