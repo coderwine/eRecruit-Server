@@ -1,21 +1,21 @@
 const router = require('express').Router();
-const Rec = require('../db').import('../models/recruiter');
+const Client = require('../db').import('../models/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 //! SIGNUP
 
 router.post('/signup', (req,res) => {
-    Rec.create({
+    Client.create({
         fullName: req.body.fullName,
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password, 10)
     }).then(
-        createSuccess = (rec) => {
-            let token = jwt.sign({ id: rec.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
+        createSuccess = (client) => {
+            let token = jwt.sign({ id: client.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
             res.json({
-                rec: rec,
-                message: 'Rec Created',
+                client: client,
+                message: 'Client Created',
                 sessionToken: token
             })
         },
@@ -26,18 +26,18 @@ router.post('/signup', (req,res) => {
 //! LOGIN
 
 router.post('/login', (req,res) => {
-    Rec.findOne({
+    Client.findOne({
         where: {
             userName: req.body.userName
         }
-    }).then(rec => {
-        if(rec){
-            bcrypt.compare(req.body.password, rec.password, (err, matches) => {
+    }).then(client => {
+        if(client){
+            bcrypt.compare(req.body.password, client.password, (err, matches) => {
                 if(matches){
-                    let token = jwt.sign({ id: rec.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
+                    let token = jwt.sign({ id: client.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
                     res.json({
-                        rec: rec,
-                        message: 'Recruiter Successfully Authenticated!',
+                        client: client,
+                        message: 'Client Successfully Authenticated!',
                         sessionToken: token
                     })
                 } else {
@@ -45,9 +45,9 @@ router.post('/login', (req,res) => {
                 }
             })
         } else {
-            res.status(500).send({error: 'Recruiter failed to Authenticate'})
+            res.status(500).send({error: 'Client failed to Authenticate'})
         }
-    }, err => res.status(501).send({error: 'Recruiter failed to Process' }))
+    }, err => res.status(501).send({error: 'Client failed to Process' }))
 })
 
 module.exports = router;
