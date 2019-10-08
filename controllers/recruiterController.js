@@ -1,12 +1,12 @@
 const router = require('express').Router();
-const Rec = require('../db').import('../models/recruiter');
+const Recruiter = require('../db').import('../models/recruiter');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 //! SIGNUP
 
 router.post('/signup', (req,res) => {
-    Rec.create({
+    Recruiter.create({
         fullName: req.body.fullName,
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password, 10)
@@ -26,7 +26,7 @@ router.post('/signup', (req,res) => {
 //! LOGIN
 
 router.post('/login', (req,res) => {
-    Rec.findOne({
+    Recruiter.findOne({
         where: {
             userName: req.body.userName
         }
