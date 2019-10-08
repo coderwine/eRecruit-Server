@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const Admin = require('../db').import('../models/admin');
+const sequelize = require('../db');
+const Admin = sequelize.import('../models/admin');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -7,9 +8,10 @@ const jwt = require('jsonwebtoken');
 
 router.post('/signup', (req,res) => {
     Admin.create({
-        fullName: req.body.fullName,
+        name: req.body.name,
         email: req.body.email,
-        passwordHash: bcrypt.hashSync(req.body.password, 10)
+        userName: req.body.userName,
+        password: bcrypt.hashSync(req.body.password, 10)
     }).then(
         createSuccess = (admin) => {
             let token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
