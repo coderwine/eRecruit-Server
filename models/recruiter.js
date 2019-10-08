@@ -1,5 +1,6 @@
+
 module.exports = (sequelize, DataTypes) => {
-    const Log = sequelize.define('log', {
+    const Recruiter = sequelize.define('recruiter', {
       name: {
         type: DataTypes.STRING,
         allowNull: false
@@ -8,22 +9,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      username: {
+      userName: {
         type: DataTypes.STRING,
         allowNull: false
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false
-      },
-      comments: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      linkedin: {
-        type: DataTypes.STRING,
-        allowNull: true
       }
     })
-    return Log;
+    return Recruiter
   }

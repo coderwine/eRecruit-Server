@@ -1,4 +1,4 @@
-// full name, email, password
+//! May need to include another line for images.  - verify how this will need to be pulled.
 
 module.exports = function (sequelize, DataTypes) { 
 
