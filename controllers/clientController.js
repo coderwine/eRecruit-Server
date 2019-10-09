@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const Client = require('../db').import('../models/client');
+const sequelize = require('../db');
+const Client = sequelize.import('../models/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 

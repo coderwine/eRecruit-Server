@@ -1,12 +1,13 @@
 const router = require('express').Router();
-const Recruiter = require('../db').import('../models/recruiter');
+const sequelize = require('../db');
+const Rec = sequelize.import('../models/recruiter');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 //! SIGNUP
 
 router.post('/signup', (req,res) => {
-    Recruiter.create({
+    Rec.create({
         fullName: req.body.fullName,
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password, 10)
@@ -26,7 +27,7 @@ router.post('/signup', (req,res) => {
 //! LOGIN
 
 router.post('/login', (req,res) => {
-    Recruiter.findOne({
+    Rec.findOne({
         where: {
             userName: req.body.userName
         }

@@ -1,7 +1,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     const Recruiter = sequelize.define('recruiter', {
-      name: {
+      fullName: {
         type: DataTypes.STRING,
         allowNull: false
       },
