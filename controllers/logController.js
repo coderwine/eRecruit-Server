@@ -1,34 +1,35 @@
-var express = require('express');
-var router = express.Router();
-var sequelize = require('../db');
-var ClientLog = sequelize.import('../models/clientLog');
+const express = require('express');
+const router = express.Router();
+const sequelize = require('../db');
+const Log = sequelize.import('../models/logs');
 const validateSession = require('../middleware/validate-session');
-
 
 
 //! POST
 router.post('/', validateSession, (req, res) => {
-    const ClientLogReq = {
+    const LogRequest = {
+        description: req.body.description,
         location: req.body.location,
         skills: req.body.skills,
-        messages: req.body.name,
         linkedInURL: req.body.linkedInURL,
         gitHubURL: req.body.gitHubURL,
         portfolioURL: req.body.portfolioURL,
-        img: Request.body.img  //!NEED TO VERIFY IMG PLACEMENT
+        img: req.body.img,
+        message: req.body.message
 
     }
 
-    ClientLog.create(ClientLogReq)
-        .then(clientLog => res.status(200).json(clientLog))
+    Log.create(LogRequest)
+        .then(log => res.statusMessage(200).json(log))
+        .then(console.log('rec-log info logged'))
         .catch(err => res.json(req.errors))
 
 })
 
 //! GET
 router.get('/', (req, res) => {
-    ClientLog.findAll()
-        .then(clientLog => res.status(200).json(clientLog))
+    Log.findAll()
+        .then(log => res.status(200).json(log))
         .catch(err => res.status(500).json({
             error: err
         }))
@@ -36,31 +37,28 @@ router.get('/', (req, res) => {
 
 //! GET by ID         
 router.get('/:id', (req, res) => {
-    ClientLog.findOne({
+    Log.findOne({
         where: {id: req.params.id}
     })
-    .then(clientLog => res.status(200).json(clientLog))
+    .then(log => res.status(200).json(log))
     .catch(err => res.status(500).json({
         error: err }))
 })
 
-
 //! PUT by ID
 router.put('/:id', (req, res) => {
-    ClientLog.update(req.body, {
+    Log.update(req.body, {
         where: {id: req.params.id}})
-        .then(clientLog => res.status(200).json(clientLog))
+        .then(log => res.status(200).json(log))
         .catch(err => res.json(req.errors))
 
     })
 
-
-
 //! Delete by ID
 router.delete('/:id', (req, res) => {
-    ClientLog.destroy({
+    Log.destroy({
         where: {id: req.params.id}})
-        .then(clientLog => res.status(200).json(clientLog))
+        .then(log => res.sendStatus(200).json(log))
         .catch(err => res.json({
             error: err
     }))
