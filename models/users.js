@@ -1,5 +1,3 @@
-// fullname, email, username, password
-
 module.exports = (sequelize, DataTypes) => {
     const Users = sequelize.define('users', {
       fullName: {
