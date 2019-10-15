@@ -1,23 +1,22 @@
 const router = require('express').Router();
 const sequelize = require('../db');
-const Rec = sequelize.import('../models/recruiter');
+const User = sequelize.import('../models/users');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 //! SIGNUP
 
 router.post('/signup', (req,res) => {
-    Rec.create({
+    User.create({
         fullName: req.body.fullName,
         email: req.body.email,
-        userName: req.body.userName,
         password: bcrypt.hashSync(req.body.password, 10)
     }).then(
-        createSuccess = (rec) => {
-            let token = jwt.sign({ id: rec.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
+        createSuccess = (user) => {
+            let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
             res.json({
-                rec: rec,
-                message: 'Rec Created',
+                user: user,
+                message: 'User Created',
                 sessionToken: token
             })
         },
@@ -28,18 +27,18 @@ router.post('/signup', (req,res) => {
 //! LOGIN
 
 router.post('/login', (req,res) => {
-    Rec.findOne({
+    User.findOne({
         where: {
-            userName: req.body.userName
+            email: req.body.email
         }
-    }).then(rec => {
-        if(rec){
-            bcrypt.compare(req.body.password, rec.password, (err, matches) => {
+    }).then(user => {
+        if(user){
+            bcrypt.compare(req.body.password, user.password, (err, matches) => {
                 if(matches){
-                    let token = jwt.sign({ id: rec.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
+                    let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 60*60*24 })
                     res.json({
-                        rec: rec,
-                        message: 'Recruiter Successfully Authenticated!',
+                        user: user,
+                        message: 'User has Successfully Authenticated!',
                         sessionToken: token
                     })
                 } else {
@@ -47,9 +46,9 @@ router.post('/login', (req,res) => {
                 }
             })
         } else {
-            res.status(500).send({error: 'Recruiter failed to Authenticate'})
+            res.status(500).send({error: 'User has failed to Authenticate'})
         }
-    }, err => res.status(501).send({error: 'Recruiter failed to Process' }))
+    }, err => res.status(501).send({error: 'User has failed to Process' }))
 })
 
 module.exports = router;
